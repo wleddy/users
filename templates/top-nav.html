@@ -1,0 +1,29 @@
+<div id="nav">
+    <div onclick="" id="profile-menu" class="dropdown">
+        <p class="dd-menu-header">
+            {% if g.user %}My Profile{% else %}<a href="{{ url_for('login.login')}}" >Login</a>{% endif %}
+        </p>
+        <div class="dropdown-content">
+            <ul>
+                {% if g.user %}
+                <li><a href="{{ url_for('user.edit')}}" >Manage Profile</a></li>
+                <li><a href="{{ url_for('login.logout')}}">Logout</a></li>
+                    {% if g.admin and g.admin.has_access(g.user)%}
+                        <p class="dd-menu-divider">Admin</p>
+                        {% for item in g.admin.permissions %}
+                            {% if g.admin.has_access(g.user,item['table'])%}
+                            <li><a href="{{item['url']}}">{{item['display_name']}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div>
+        <p class="menu-item" ><a href="/">Home</a></p>
+        <p class="menu-item" ><a href="/">About</a></p>
+        <p class="menu-item" ><a href="/">Contact Us</a></p>
+    </div>
+    <p class="clear">&nbsp;</p>
+</div>

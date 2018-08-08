@@ -1,0 +1,10 @@
+<h3>Account Activation Complete</h3>
+<p>Your new account at {{config.SITE_NAME}} is now active.</p>
+{% if context.rec.password == None or context.rec.password == ''%}
+<p>You did not enter a password when you created your account so if you want to be able to manage your account
+    information, you will need to add one.
+</p>
+<p>You can do that by clicking this link to <a href="{{ config.HOST_PROTOCOL|default('http') }}://{{config.HOST_NAME}}{{ url_for('login.recover_password')}}">&quot;Reset&quot;</a> your password.</p>
+{% else %}
+<p>You can log into your account by clicking this link to <a href="{{ config.HOST_PROTOCOL|default('http') }}://{{config.HOST_NAME}}{{ url_for('login.login')}}">Log in</a>.</p>
+{% endif %}

@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Edit {{ g.title }}{% endblock %}
+{% block body %}
+	<h2>Edit {{ g.title }}</h2>	
+    {% if help %}
+        <div>{{ help|safe }}</div>
+    {% endif %}
+    <form action="{{ g.editURL }}" method=post class="entry">
+		{% include "editFormButtons.html" %}
+        <fieldset>
+            <input type=hidden name="id" value="{{rec.id}}">
+            <p><span>Name: </span><input type=text size=30 name="first_name" required value="{{rec.first_name|default('',true)}}"/>
+                <input type=text size=30 name="last_name" required value="{{rec.last_name|default('',true)}}"/>
+            </p>
+            <p><span>Email: </span><input type=text size=30 name="email" required value="{{rec.email|default('',true)}}"/></p>
+            <p><span>User Name: </span>
+                <input type=text size=30 name="new_username" value="{{rec.username|default('',true)}}" 
+                {% if not config.ALLOW_USERNAME_CHANGE %}disabled="disabled"{% endif %} />
+            </p>
+            <p><span>Password: {% if rec.password and rec.password != '' %}(leave blank to keep current){% else %}(&mdash; Optional &mdash;){% endif %}: </span>
+                <input type=password size=30 name="new_password" value=""/>
+            </p>
+            <p><span>Re-enter password: </span><input type=password size=30 name="confirm_password" value=""/></p>
+            <p><span>Address: </span><input type=text size=47 name="address" value="{{rec.address|default('',true)}}"/>
+                <br/><input type=text size=47 name="address2" value="{{rec.address2|default('',true)}}"/>
+                </p>
+            <p><span>City, State Zip</span>
+                <input type=text size=20 name="city" value="{{rec.city|default('',true)}}"/>,
+                <input type=text size=3 name="state" value="{{rec.state|default('',true)}}"/>
+                <input type=text size=11 name="zip" value="{{rec.zip|default('',true)}}"/>
+            </p>
+            <p><span>Phone: </span><input type=text size=30 name="phone" value="{{rec.phone|default('',true)}}"/></p>
+            {% if is_admin %}
+                <p><span>Roles: </span>
+                <select name="roles_select" multiple size="5">
+                    {% for role in roles %}
+                        <option value="{{role.id}}" {% if role.name in user_roles %}selected="selected" {% endif %}>{{role.name}}</option>
+                    {% endfor %}
+                </select>
+                </p>
+                <p style="float:left;width:50pt;"><span>Active: </span>
+                    <input type=radio  name="active" value="1" {% if rec.active ==1 %} checked="checked" {% endif %}/>
+                </p>
+                <p><span>Inactive: </span>
+                    <input type=radio  name="active" value="0" {% if rec.active== 0 %} checked="checked" {% endif %}/>
+                </p>
+                <p class="float:none;"><span>Last Access: </span> {{rec.last_access|default('Never',true)}} (UTC)</p>
+            {% endif %}
+        </fieldset>
+    </form>
+{% endblock %}

@@ -1,0 +1,7 @@
+Welcome {{ context.full_name }}
+
+You have a new account at {{ config.SITE_NAME }}
+
+{% if context.rec.password %}
+You can log in to your account at https://{{config.HOST_NAME}}{{url_for('login.login')}}
+{% endif %}

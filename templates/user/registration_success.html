@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}{{ g.title }}{% endblock %}
+{% block body %}
+{% if success == 'active' %}
+    <h3>Your account is now active.</h3>
+    <p>Your account is now ready to use. You may <a href="{{url_for('login.login')}}">log in</a> here.</p>
+{% elif success == 'waiting' %}
+    <h3>Your account is awaiting activation</h3>
+    <p>Thank you for confirming your email address. Your account is now awaiting activation by the site administrator. This should be completed within a day or so.</p>
+    <p>We will contact you at the email address you provided. If you have questions please feel free to <a href="/contact/">contact us</a>.</p>
+{% elif success %}
+    <h3>Signup Successful</h3>
+    <p>Thank you for creating an account at {{config.SITE_NAME}}.</p>
+    <p>An email has been sent to the email address you provided. In order to activate your account you must follow the link provided there to confirm your email address.</p>
+    <p>Your account will then be activated by the site administrator.</p>
+{% else %}
+    <h3>There was a problem with your signup</h3>
+    <p>We're sorry, but there was an error encountered while attempting to create your account. The site adminstrator has been notified.</p>
+    <p>We will contact you at the email address you provided. If you have questions please feel free to <a href="/contact/">contact us</a>.</p>
+{% endif %}
+{% endblock body %}

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}{{ g.title }} List{% endblock %}
+{% block body %}
+	<h2>{{g.title}} List</h2>
+  	<p id="addRecord"><a href="{{ g.adminURL }}">Add a new {{ g.title }}</a></p>
+	{%if recs %}
+		<table class="datatable">
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Status</th>
+		</tr>
+		{% for rec in recs %}
+	    <tr>
+			<td><a href="{{ g.editURL }}{{ rec.id }}/">{{ rec.id }}</a></td>
+			<td><a href="{{ g.editURL }}{{ rec.id }}/">{{ rec.first_name }} {{ rec.last_name}}</a></td>
+			<td>{{ rec.email|default("",true) }}</td>
+			<td><em>{% if rec.active == 1 %}Active{% else %}Inactive{% endif %}</em></td>
+		</tr>
+		{% endfor %}
+	  </table>
+  	{% else %}
+    	<p><em>No {{ g.title }}s here so far</em></p>
+	{% endif %}
+{% endblock %}

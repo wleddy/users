@@ -1,0 +1,9 @@
+Password Reset Confirmation
+
+You are receiving this email because someone (hopfully you) requested a reset for your account password at {{config.SITE_NAME}}.
+
+If you did not request the reset you do not need to do anything. Your password has not been changed.
+
+If you did request a reset, please copy and paste this link into your web browser {{config.HOST_PROTOCOL|default('http')}}://{{config.HOST_NAME}}{{g.loginURL}}?reset={{context.temp_pass}}
+
+This reset request will expire in 48 hours from the time of this email.

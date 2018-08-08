@@ -1,0 +1,9 @@
+## Registration Confirmation #
+
+You are receiving this email because someone (hopefully you) requested that a new account be created at {{config.SITE_NAME}}.
+
+If you did not request that the account be created you don't need to do anything.
+
+If you did make the request, please paste this link into your web browser: {{config.HOST_PROTOCOL|default('http')}}://{{config.HOST_NAME}}{{g.registerURL}}?confirm={{context.confirmation_code}} to confirm your new account.
+
+This confirmation request will expire in 48 hours from the time of this email.

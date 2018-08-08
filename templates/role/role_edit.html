@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Edit {{ g.title }}{% endblock %}
+{% block body %}
+	<h2>Edit {{ g.title }}</h2>	
+    <form action="{{ g.editURL }}{{ rec.id|default('0',True)}}/" method=post class="entry">
+		{% include "editFormButtons.html" %}
+        <fieldset>
+    		<input type=hidden name="id" value="{{rec.id|default('0',True )}}">
+            <p><span>Name:</span><input type="text" size="10" name="name" required value="{{ rec.name|default('',True )}}" /></p>
+            <p><span>Description: </span><input type="text" size="30" name="description" value="{{ rec.description|default('',True )}}" /></p>
+            <p><span>Rank: </span><input type="number" name="rank" required value="{{ rec.rank|default('0',True)}}" /></p>
+        </fieldset>
+    </form>
+{% endblock body %}

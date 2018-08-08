@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}User Profile{% endblock %}
+{% block body %}
+    {% if g.user %}
+       <h3>User Profile for {{ g.user }}</h3>
+    {% else %}
+        <h3>You must be logged in to see more...</h3>
+    {% endif %}
+    <ul class="list-menu">
+        {% if g.user %}
+        <li><a href="{{ url_for('user.edit')}}" >Manage Your User Record</li>
+        <li><a href="{{ url_for('login.logout')}}">Logout</a></li>
+        {% else %}
+        <li><a href="{{ url_for('login.login')}}" >Login</li>
+        {% endif %}
+    </ul>
+{% endblock %}
