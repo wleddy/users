@@ -97,7 +97,7 @@ def edit(rec_handle=None):
             rec = user.get(rec_handle,include_inactive=include_inactive)
             if not rec:
                 flash("Unable to locate user record")
-                return redirect(url_for('home'))
+                return redirect('/')
                 
         user_roles = get_user_role_names(rec)
         
@@ -194,7 +194,7 @@ def register():
     setExits()
     g.title = "Account Registration"
     g.editURL = url_for('.register')
-    g.listURL = url_for('home') # incase user cancels
+    g.listURL = '/' # incase user cancels
     user = User(g.db)
     rec=user.new()
     
@@ -231,7 +231,7 @@ def register():
             return render_template('user/registration_success.html',success=success)
         else:
             flash("That reset request has expired")
-            return redirect(url_for('home'))
+            return redirect('/')
 
     if not request.form:
         pass
@@ -305,11 +305,11 @@ def activate():
             
         else:
             flash("User not found with access_token: {}".format(activate))
-            return redirect(url_for('home'))
+            return redirect('/')
             
     else:
         flash("Activation code not in request args")
-        return redirect(url_for('home'))
+        return redirect('/')
     
     flash("New User Activation Successful")
     return edit(rec.id)
