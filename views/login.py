@@ -25,7 +25,7 @@ def login():
     
     if g.user is not None:
         #flash("Already Logged in...")
-        return redirect(url_for("home"))
+        return redirect('/')
         
     if 'reset' in request.args:
         #Try to find the user record that requested a reset
@@ -38,7 +38,7 @@ def login():
             return redirect(url_for('user.edit'))
         else:
             flash("That reset request has expired")
-            return redirect(url_for('home'))
+            return redirect('/')
             
     if not request.form:
         if 'loginTries' not in session:
@@ -64,7 +64,7 @@ def login():
             
             if next:
                 return redirect(next)
-            return redirect(url_for('home')) #logged in...
+            return redirect('/') #logged in...
         else:
             flash("Invalid User Name or Password")
         
@@ -86,7 +86,7 @@ def logout():
     session.clear()
     g.user = None
     flash("Successfully Logged Out")
-    return redirect(url_for("home"))
+    return redirect('/')
     
 @mod.route('/reset', methods=['GET','POST'])
 def recover_password():

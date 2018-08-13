@@ -4,9 +4,12 @@ from app import mail, app
 from flask_mail import Message
 from users.utils import printException, cleanRecordID
 
-def send_message(to_address_list,**kwargs):
+def send_message(to_address_list=None,**kwargs):
     """Send an email with the parameters as:
-        to_address_list=[list of tuples (recipient name,recipient address)]=[]
+        to_address_list=[list of tuples (recipient name,recipient address)]=None
+        
+        If the to_address_list is not provided, mail will be sent to the admin
+        
         -- all templates must use 'context' as their only context variable
         **kwargs:
             context = {a dictionary like object with data for rendering all emails} = {}
@@ -25,7 +28,6 @@ def send_message(to_address_list,**kwargs):
             success [True or False]
             message "some message"
     """
-
     context = kwargs.get('context',{})
     body = kwargs.get('body',None)
     body_is_html = kwargs.get('body_is_html',None)
@@ -35,7 +37,6 @@ def send_message(to_address_list,**kwargs):
     from_address = kwargs.get('from_address',app.config['MAIL_DEFAULT_ADDR'])
     from_sender = kwargs.get('from_address',app.config['MAIL_DEFAULT_SENDER'])
     reply_to = kwargs.get('reply_to',from_address)
-    reply_to_name = kwargs.get('reply_to_name',from_sender)
     subject = subject_prefix + ' ' +kwargs.get('subject','A message from {}'.format(from_sender))
     
     if not text_template and not html_template and not body:
@@ -44,9 +45,9 @@ def send_message(to_address_list,**kwargs):
         return (False, mes)
         
     if not to_address_list or len(to_address_list) == 0 or len(to_address_list[0]) != 2:
-        mes = "No recipients were specified"
-        printException(mes,"error")
-        return (False, mes)
+        #no valid address, so send it to the admin
+        to_address_list = [(app.config['MAIL_DEFAULT_SENDER'],app.config['MAIL_DEFAULT_ADDR']),]
+        
         
     with mail.record_messages() as outbox:
         for name,address in to_address_list:
@@ -66,6 +67,8 @@ def send_message(to_address_list,**kwargs):
                 msg.html = render_template(html_template, context=context)
             if text_template:
                 msg.body = render_template(text_template, context=context) 
+                
+            msg.reply_to = reply_to
                
             try:
                 mail.send(msg)
