@@ -37,7 +37,6 @@ def send_message(to_address_list=None,**kwargs):
     from_address = kwargs.get('from_address',app.config['MAIL_DEFAULT_ADDR'])
     from_sender = kwargs.get('from_address',app.config['MAIL_DEFAULT_SENDER'])
     reply_to = kwargs.get('reply_to',from_address)
-    reply_to_name = kwargs.get('reply_to_name',from_sender)
     subject = subject_prefix + ' ' +kwargs.get('subject','A message from {}'.format(from_sender))
     
     if not text_template and not html_template and not body:
@@ -68,6 +67,8 @@ def send_message(to_address_list=None,**kwargs):
                 msg.html = render_template(html_template, context=context)
             if text_template:
                 msg.body = render_template(text_template, context=context) 
+                
+            msg.reply_to = reply_to
                
             try:
                 mail.send(msg)
