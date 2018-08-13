@@ -12,7 +12,7 @@
             <p><span>Name: </span><input type=text size=30 name="first_name" required value="{{rec.first_name|default('',true)}}"/>
                 <input type=text size=30 name="last_name" required value="{{rec.last_name|default('',true)}}"/>
             </p>
-            <p><span>Email: </span><input type=text size=30 name="email" required value="{{rec.email|default('',true)}}"/></p>
+            <p><span>Email: </span><input type=email size=30 name="email" required value="{{rec.email|default('',true)}}"/></p>
             <p><span>User Name: </span>
                 <input type=text size=30 name="new_username" value="{{rec.username|default('',true)}}" 
                 {% if not config.ALLOW_USERNAME_CHANGE %}disabled="disabled"{% endif %} />
