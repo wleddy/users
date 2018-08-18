@@ -5,6 +5,7 @@ import random
 from users.models import User
 from users.views.password import getPasswordHash, matchPasswordToHash
 from users.utils import get_access_token
+from users.admin import silent_login
 
 mod = Blueprint('login',__name__, template_folder='../templates')
 
@@ -50,18 +51,13 @@ def login():
             #If not, there is no point in going on... Also, could be a bot.
             return render_template('login/no-cookies.html')
         
-        rec = User(g.db).get(request.form["userNameOrEmail"],include_inactive=True)
-
-        if rec and matchPasswordToHash(request.form["password"],rec.password):
+        result = authenticate_user(request.form["userNameOrEmail"],request.form['password'])
+        if result != 0:
             session['loginTries'] = 0
-            if rec.active == 0:
-                #import pdb;pdb.set_trace()
+            if result == -1:
                 flash("Your account is inactive")
                 return render_template('/login/inactive.html')
-                
-            # log user in...
-            setUserStatus(request.form["userNameOrEmail"],rec.id)
-            
+            #import pdb;pdb.set_trace()          
             if next:
                 return redirect(next)
             return redirect('/') #logged in...
@@ -130,7 +126,15 @@ def recover_password():
     # Return a page telling user what we did
     return render_template('login/recover_password.html',temp_pass=temp_pass,rec=rec)
     
-        
+    
+@mod.route('/quiet_test', methods=['GET','POST'])
+@mod.route('/quiet_test/', methods=['GET','POST'])
+@silent_login
+def quite_test_fixture():
+    """Simple way to test that the silent_login decorator is working"""
+    return "Ok"
+    
+    
 def setUserStatus(userNameOrEmail,user_id):
     #Log the user in
     user = User(g.db)
@@ -139,5 +143,35 @@ def setUserStatus(userNameOrEmail,user_id):
     g.user = userNameOrEmail
     g.user_roles = user.get_roles(user_id)
     
+    
+def authenticate_user(username,password,**kwargs):
+    """
+    Check username and password in db and return:
+        0 = Authentication Failed
+        1 = Authentication Succeeded
+        -1 = User Inactive
+        
+    Optional kwargs:
+        include_inactive = True
+        login_on_success = True
+    """
+    
+    include_inactive = kwargs.get('include_inactive',True)
+    login_on_success = kwargs.get('login_on_success',True)
+    
+    result = 0
+    
+    rec = User(g.db).get(username,include_inactive=include_inactive)
+
+    if rec and matchPasswordToHash(password,rec.password):
+        result = 1
+        if rec.active != 1:
+            result = -1
+        if rec.active == 1 and login_on_success:
+            setUserStatus(username,rec.id)
+            
+    return result
+            
+
     
     

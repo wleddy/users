@@ -40,7 +40,7 @@ def delete_test_db():
 
 def test_login(client):
     with client as c:
-        from flask import session, g
+        from flask import session, g, request
         result = c.get('/login/')   
         assert result.status_code == 200
         assert b'User Name or Email Address' in result.data 
@@ -51,8 +51,33 @@ def test_login(client):
         assert session['user'] == 'admin'
         ## don't test the resulting page... it is part of the overlying app
         #assert b'Hello' in result.data
+        
+        result = c.get('/logout/',follow_redirects=True)   
+        assert result.status_code == 200
+        assert b'Logged Out' in result.data 
+        assert 'user' not in session
+        
+        result = c.post('/quiet_test/', data={'password': 'dog', 'password': 'password'},follow_redirects=True)
+        assert result.status == '200 OK'
+        assert b'Login Required' in result.data
+        assert 'user' not in session
+        
+        result = c.post('/quiet_test/', data={'username': 'admin', 'password': 'password'},follow_redirects=True)
+        #print(result.data)
+        #print(g.user)
+        #print(request.form['password'])
+        assert result.status == '200 OK'
+        assert b'Login Required' not in result.data
+        assert session['user'] == 'admin'
+        assert b'Ok' in result.data
+        
+        #Now should be able to work without password
+        result = c.get('/logout/',follow_redirects=True)   
+        assert result.status_code == 200
+        assert 'user' not in session
+
     
-    
+        
 ############################ The final 'test' ########################
 ######################################################################
 def test_finished():

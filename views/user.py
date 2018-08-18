@@ -2,7 +2,8 @@ from flask import request, session, g, redirect, url_for, abort, \
      render_template, flash, Blueprint
 from users.models import User, Role
 from users.utils import printException, cleanRecordID, looksLikeEmailAddress, get_access_token
-from users.views.login import matchPasswordToHash, setUserStatus, getPasswordHash
+from users.views.login import setUserStatus
+from users.views.password import getPasswordHash
 from users.admin import login_required, table_access_required
 from time import time
 
