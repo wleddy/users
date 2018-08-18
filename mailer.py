@@ -82,5 +82,27 @@ def send_message(to_address_list=None,**kwargs):
                 return (True, mes )
     
             return (True, "Email Sent Successfully")
+            
+            
+def email_admin(subject=None,message=None):
+    """
+        Shortcut method to send a quick email to the admin
+    """
+    if subject == None and message != None:
+        # assume the subject is really the message
+        message = subject
+        subject = None
+        
+    if subject == None:
+        subject = "An alert was sent from {}".format(app.config['SITE_NAME'])
+        
+    if message == None:
+        message = "An alert was sent from {} with no message...".format(app.config['SITE_NAME'])
+        
+    send_message(
+        None,
+        subject=subject,
+        body = message,
+        )
     
     

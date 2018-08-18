@@ -95,7 +95,6 @@ def table_access_required(table):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            from users.views.login import authenticate_user
             if g.user is None or not g.admin or not g.admin.has_access(g.user,table):
                 flash("Permission Denied")
                 return redirect(url_for('login.login', next=request.url))
@@ -104,22 +103,22 @@ def table_access_required(table):
     return decorator
     
     
-def silent_login(f):
-    """
-        Expects a username and password in the POST data
-        Try to login and return requested resource
-    """
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        #import pdb;pdb.set_trace()
-        from users.views.login import authenticate_user
-        if g.user == None \
-            and (not request.form \
-            or 'username' not in request.form \
-            or 'password' not in request.form \
-            or authenticate_user(request.form["username"],request.form['password']) != 1):
-            flash("Login Required")
-            return redirect(url_for('login.login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
-    
+def silent_login(alert=True):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            #import pdb;pdb.set_trace()
+            from users.views.login import authenticate_user
+            from users.mailer import email_admin
+            if g.user == None \
+                and (not request.form \
+                or 'username' not in request.form \
+                or 'password' not in request.form \
+                or authenticate_user(request.form["username"],request.form['password']) != 1):
+                if alert:
+                    email_admin("Silent Login Failed","A attempt to login to {} silently failed".format(request.url))
+                flash("Login Required")
+                return redirect(url_for('login.login', next=request.url))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator

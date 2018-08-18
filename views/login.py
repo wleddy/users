@@ -129,7 +129,7 @@ def recover_password():
     
 @mod.route('/quiet_test', methods=['GET','POST'])
 @mod.route('/quiet_test/', methods=['GET','POST'])
-@silent_login
+@silent_login()
 def quite_test_fixture():
     """Simple way to test that the silent_login decorator is working"""
     return "Ok"
