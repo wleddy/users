@@ -8,7 +8,7 @@ import pytest
 import tempfile
 
 import app
-from users.views.login import getPasswordHash
+from users.views.password import getPasswordHash
 
 @pytest.fixture
 def client():
