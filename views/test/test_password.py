@@ -4,7 +4,7 @@ sys.path.append('') ##get import to look in the working dir.
 
         
 def test_password():
-    import users.views.password as login
+    from users.views import password
     # basic tests
     passwords = ("password", 
                  "PassWord",
@@ -13,7 +13,7 @@ def test_password():
                 )
     results = ()
     for x in range(len(passwords)):
-        results += (login.getPasswordHash(passwords[x]),)
+        results += (password.getPasswordHash(passwords[x]),)
         
     for x in range(len(passwords)):
         print('Basic test {}; pw: {}, hash: {}'.format(x,passwords[x],results[x]))
@@ -26,13 +26,13 @@ def test_password():
     ### test the helper method to test a password
     for x in range(len(passwords)):
         print('Match test {}; pw: {}, hash: {}'.format(x,passwords[x],results[x]))
-        assert login.matchPasswordToHash(passwords[x],results[x])
+        assert password.matchPasswordToHash(passwords[x],results[x])
         
     ### test the None inputs and returns
-    assert login.getPasswordHash('') == None
-    assert login.matchPasswordToHash('',4) == False
-    assert login.matchPasswordToHash('password','') == False
-    assert login.matchPasswordToHash('password',234234) == False
-    assert login.matchPasswordToHash('password',None) == False
-    assert login.matchPasswordToHash(None,None) == False
+    assert password.getPasswordHash('') == None
+    assert password.matchPasswordToHash('',4) == False
+    assert password.matchPasswordToHash('password','') == False
+    assert password.matchPasswordToHash('password',234234) == False
+    assert password.matchPasswordToHash('password',None) == False
+    assert password.matchPasswordToHash(None,None) == False
     
