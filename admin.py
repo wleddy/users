@@ -107,7 +107,6 @@ def silent_login(alert=True):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            #import pdb;pdb.set_trace()
             from users.views.login import authenticate_user
             from users.mailer import email_admin
             if g.user == None \

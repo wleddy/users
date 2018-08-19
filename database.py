@@ -75,12 +75,12 @@ class SqliteTable:
         """return a namedtuple for use with this table"""        
         return namedlist('DataRow',"{}".format(",".join(self.get_column_names())),default=None)
         
-    def delete(self,id):
+    def delete(self,id,**kwargs):
         """Delete a single row with this id.
         Return True or False"""
         
         #import pdb;pdb.set_trace()
-        row = self.get(id,include_inactive = True)
+        row = self.get(id,**kwargs)
         if row:
             self.db.execute('delete from {} where id = ?'.format(self.table_name),(id,))
             return True

@@ -77,7 +77,7 @@ class User(SqliteTable):
         
         rec = self.get(rec_id,include_inactive=True)
         if rec:
-            return super().delete(rec.id)
+            return super().delete(rec.id,include_inactive=True)
             
         return False
         
@@ -179,10 +179,49 @@ class User(SqliteTable):
             self.db.execute('insert into user_role (user_id,role_id) values (?,?)',(userID,roleID))
             self.db.commit()
 
+
+class Pref(SqliteTable):
+    """
+        A table to store some random data in
+        Prefs can be global or attached to a single user
+        Prefs can also be set to expire
+    """
+    
+    def __init__(self,db_connection):
+        super().__init__(db_connection)
+        self.table_name = 'pref'
+        self.order_by_col = 'name'
+        self.defaults = {}
+        
+    def create_table(self):
+        """Define and create the table"""
+
+        sql = """
+            name TEXT,
+            value TEXT,
+            expires DATETIME,
+            user_name TEXT
+            """
+        super().create_table(sql)
+
+    def get(self,name,user_name=None,**kwargs):
+        """can get by pref name and user_name"""
+        user_clause = ''
+        if user_name:
+            user_clause = ' and user_name = {}'.format(user_name)
+        
+        if type(name) is str:
+            where = ' name = "{}" {}'.format(name,user_clause)
+        else:
+            where = ' id = {}'.format(cleanRecordID(name))
+            
+        return self.select_one(where=where)
+        
         
 def init_db(db):
     """Create a intial user record."""
     Role(db).init_table()
     UserRole(db).init_table()
     User(db).init_table()
+    Pref(db).init_table()
     

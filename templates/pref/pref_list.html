@@ -8,15 +8,17 @@
 		<tr>
 			<th>Id</th>
 			<th>Name</th>
-			<th>Description</th>
-            <th>Rank</th>
+			<th>value</th>
+            <th>User</th>
+            <th>Expires</th>
 		</tr>
 		{% for rec in recs %}
 	    <tr>
 			<td style="min-width:20px;text-align:center;"><a href="{{ g.editURL }}{{ rec.id }}/">{{ rec.id }}</a></td>
-			<td style="min-width:100px;"><a href="{{ g.editURL }}{{ rec.id }}/">{{ rec.name }}</a></td>
-			<td style="min-width:200px;">{{ rec.description|default("",true) }}</td>
-			<td style="min-width:80px;text-align:right;">{{ rec.rank|default("0",true) }}</td>
+			<td style="min-width:30px;"><a href="{{ g.editURL }}{{ rec.id }}/">{{ rec.name }}</a></td>
+			<td style="min-width:60px;">{{ rec.value|default("",true) }}</td>
+			<td style="min-width:30px;">{{ rec.user_name|default("",true) }}</td>
+			<td style="min-width:30px;">{{ rec.expires|default("Never",true) }}</td>
 		</tr>
 		{% endfor %}
 	  </table>
