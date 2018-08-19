@@ -6,7 +6,7 @@ as well as a Pref table to hold random preferences.
 ## Installation:
 
 Clone next to a python 3.x virtualenv along with the packages listed below. Normally I expect this package to be cloned
-into a [shotglass]("https://github.com/wleddy/shotglass") project as a starting point for a web app.
+into a [shotglass](https://github.com/wleddy/shotglass) project as a starting point for a web app.
 
 Users will provide all the database functionality for the starter site including
 
