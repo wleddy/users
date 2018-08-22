@@ -34,6 +34,7 @@ class Admin():
         """Add an item to the admin_list"""
         display_name=kwargs.get('display_name',None)
         minimum_rank_required=kwargs.get('minimum_rank_required',99999999) #No one can access without a qualifiying role
+        header_row = kwargs.get('header_row',False)
         roles=kwargs.get('roles',[])
         
         
@@ -41,13 +42,14 @@ class Admin():
         if not display_name:
             display_name = table_ref.display_name
             
-        permission = {'table':table,'display_name':display_name,'url':url,'minimum_rank_required':minimum_rank_required,'roles':roles}
+        permission = {'table':table,'display_name':display_name,'url':url,'header_row':header_row,'minimum_rank_required':minimum_rank_required,'roles':roles}
         
         #test that table only has one permission
-        for x in range(len(self.permissions)):
-            if self.permissions[x]['table'] == table:
-                self.permissions[x] = permission
-                return
+        # as of 8/22/18 it is now the responsibilty of the developer to not duplicate permissions
+        #for x in range(len(self.permissions)):
+        #    if self.permissions[x]['table'] == table:
+        #        self.permissions[x] = permission
+        #        return
                 
         self.permissions.append(permission)
            
