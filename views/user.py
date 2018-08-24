@@ -6,6 +6,8 @@ from users.views.login import setUserStatus
 from users.views.password import getPasswordHash
 from users.admin import login_required, table_access_required
 from time import time
+from datetime import datetime
+
 
 mod = Blueprint('user',__name__, template_folder='../templates', url_prefix='/user')
 
@@ -223,7 +225,8 @@ def register():
             #inform the admin
             to=[(app.config['MAIL_DEFAULT_SENDER'],app.config['MAIL_DEFAULT_ADDR'])]
             confirmURL = "{}://{}{}?activate={}".format(app.config['HOST_PROTOCOL'],app.config['HOST_NAME'],url_for('.activate'), rec.access_token)
-            context={'rec':rec,'confirmURL':confirmURL}
+            deleteURL = "{}://{}{}?delete={}".format(app.config['HOST_PROTOCOL'],app.config['HOST_NAME'],url_for('.delete'), rec.access_token)
+            context={'rec':rec,'confirmURL':confirmURL,'deleteURL':deleteURL}
             subject = 'Activate Account Request from - {}'.format(app.config['SITE_NAME'])
             html_template = 'user/email/admin_activate_acct.html'
             text_template = None
@@ -248,7 +251,6 @@ def register():
             
             try:
                 user.save(rec)
-                g.db.commit()
                 
                 #Send confirmation email to user
                 full_name = '{} {}'.format(rec.first_name,rec.last_name).strip()
@@ -259,6 +261,17 @@ def register():
                 text_template = 'user/email/registration_confirm.txt'
                 send_message(to,context=context,subject=subject,html_template=html_template,text_template=text_template)
                 
+                #inform the admin
+                to=[(app.config['MAIL_DEFAULT_SENDER'],app.config['MAIL_DEFAULT_ADDR'])]
+                deleteURL = "{}://{}{}?delete={}".format(app.config['HOST_PROTOCOL'],app.config['HOST_NAME'],url_for('.delete'), rec.access_token)
+                context={'rec':rec,'deleteURL':deleteURL,'registration_exp':datetime.fromtimestamp(rec.access_token_expires).strftime('%Y-%m-%d %H:%M:%S')}
+                subject = 'Unconfirmed Account Request from - {}'.format(app.config['SITE_NAME'])
+                html_template = 'user/email/admin_activate_acct.html'
+                text_template = None
+                send_message(to,context=context,subject=subject,html_template=html_template,text_template=text_template)
+
+                g.db.commit()
+
             except Exception as e:
                 g.db.rollback()
                 mes = "An error occured while new user was attempting to register"
@@ -322,6 +335,13 @@ def activate():
 @table_access_required(User)
 def delete(rec_id=None):
     setExits()
+    delete_by_admin = request.args.get('delete',None)
+    if delete_by_admin:
+        user = User(g.db)
+        rec=user.select_one(where='access_token = "{}"'.format(delete_by_admin.strip()))
+        if rec:
+            rec_id = rec.id
+    
     if rec_id == None:
         rec_id = request.form.get('id',request.args.get('id',-1))
     
@@ -336,6 +356,7 @@ def delete(rec_id=None):
     else:
         User(g.db).delete(rec.id)
         g.db.commit()
+        flash('User Record Deleted')
         
     return redirect(g.listURL)
 

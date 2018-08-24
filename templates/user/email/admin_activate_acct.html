@@ -1,6 +1,10 @@
 <h3>Account Activation Request</h3>
 <p>A new user account has been confirmed and needs to be activated.</p>
+{% if context.confirmURL %}
 <p>Click this link to <a href="{{context.confirmURL}}">Confirm and Activate</a></p>
+{% else %}
+<p>UNCONFIRMED ACCOUNT REQUEST (Expires: {{ context.registration_exp }})</p>
+{% endif %}
 <p>User Info:</p>
 <table>
     <tr><th>Name</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.first_name}} {{context.rec.last_name}}</td></tr>
@@ -13,3 +17,4 @@
     <tr><th>State</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.state|default('None',True)}}</td></tr>
     <tr><th>Zip</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.zip|default('None',True)}}</td></tr>
 </table>
+<p>Click this link to <a href="{{context.deleteURL}}">Delete this account</a></p>
