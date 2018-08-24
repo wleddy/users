@@ -214,7 +214,7 @@ def register():
     <p>You may omit the password if you like, but if you do you will not be able to edit your account informaion in the future</p>"""
         
     if 'confirm' in request.args:
-        #Try to find the user record that requested a reset
+        #Try to find the user record that requested registration
         rec=user.select_one(where='access_token = "{}"'.format(request.args.get('confirm','')).strip())
         if rec and rec.access_token_expires > time():
             if rec.active == 1:
@@ -234,7 +234,7 @@ def register():
             
             return render_template('user/registration_success.html',success=success)
         else:
-            flash("That reset request has expired")
+            flash("That registration request has expired")
             return redirect('/')
 
     if not request.form:
