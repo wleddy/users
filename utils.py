@@ -8,7 +8,9 @@ import linecache
 import sys
 import re
 import random
-    
+import mistune # for Markdown rendering
+import os
+
 
 def cleanRecordID(id):
     """ return the integer version of id or else -1 """
@@ -79,6 +81,26 @@ def get_access_token(token_length=24):
             
     return access_token
     
+    
+def render_markdown_for(source_script,module,file_name):
+    """Try to find the file to render and then do so"""
+    rendered_html = ''
+    # use similar search approach as flask templeting, root first, then local
+    # try to find the root templates directory
+    markdown_path = os.path.dirname(os.path.abspath(__name__)) + '/templates/{}'.format(file_name)
+    if not os.path.isfile(markdown_path):
+        # look in the templates directory of the calling blueprint
+        markdown_path = os.path.dirname(os.path.abspath(source_script)) + '/{}/{}'.format(module.template_folder,file_name)
+    if os.path.isfile(markdown_path):
+        f = open(markdown_path)
+        rendered_html = f.read()
+        f.close()
+        rendered_html = render_markdown_text(rendered_html)
+
+    return rendered_html
+
+def render_markdown_text(text_to_render):
+    return mistune.markdown(text_to_render)
        
 ##############################################################################################
 ## These are functions left over from bikeandwalk. Don't think I need them, but you never know
