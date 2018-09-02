@@ -95,9 +95,12 @@ def render_markdown_for(source_script,module,file_name):
         f = open(markdown_path)
         rendered_html = f.read()
         f.close()
-        rendered_html = mistune.markdown(rendered_html)
+        rendered_html = render_markdown_text(rendered_html)
 
     return rendered_html
+    
+def render_markdown_text(text_to_render):
+    return mistune.markdown(text_to_render)
        
 ##############################################################################################
 ## These are functions left over from bikeandwalk. Don't think I need them, but you never know
