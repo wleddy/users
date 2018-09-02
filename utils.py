@@ -98,7 +98,8 @@ def render_markdown_for(source_script,module,file_name):
         rendered_html = render_markdown_text(rendered_html)
 
     return rendered_html
-    
+
+
 def render_markdown_text(text_to_render):
     return mistune.markdown(text_to_render)
        
