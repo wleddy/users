@@ -108,31 +108,6 @@ def render_markdown_text(text_to_render):
 ##############################################################################################
 #
 
-def str_to_short_date(date_str):
-    formats = [
-    '%m/%d/%y',
-    '%m/%d/%Y',
-    '%m-%d-%y',
-    '%m-%d-%Y',
-    '%y-%m-%d',
-    '%Y-%m-%d',
-    ]
-    
-    space_at = date_str.find(" ")
-    if space_at > 0:
-        date_str = date_str[:space_at]
-    
-    a_date = None
-    for fmt in formats:
-        try:
-            a_date = datetime.strptime(date_str,fmt)
-            break
-        except Exception as e:
-            a_date = datetime.now()
-            
-    return a_date
-
-
 def getDatetimeFromString(dateString):
     if type(dateString) is str: # or type(dateString) is unicode:
         pass
