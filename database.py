@@ -36,6 +36,7 @@ class SqliteTable:
         self.order_by_col = 'id' #default orderby column(s)
         self.defaults = {}
         self._display_name = None #use to override the name display
+        self.use_slots = True #Set to False to allow adding temporary fields to the list at runtime
         
     def create_table(self,definition=""):
         """The default table definition script. definition arg is a string of valid SQL"""
@@ -73,7 +74,7 @@ class SqliteTable:
     @property
     def data_tuple(self):
         """return a namedtuple for use with this table"""        
-        return namedlist('DataRow',"{}".format(",".join(self.get_column_names())),default=None)
+        return namedlist('DataRow',"{}".format(",".join(self.get_column_names())),default=None,use_slots=self.use_slots)
         
     def delete(self,id,**kwargs):
         """Delete a single row with this id.
