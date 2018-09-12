@@ -1,8 +1,12 @@
 from users.utils import getDatetimeFromString
+from datetime import datetime
 
 # some custom filters for templates
 
 def short_date_string(value, format='%-m/%-d/%y'):
+    if value is None or value == "":
+        # test if value is None or the empty string
+        return value
     if type(value) is datetime:
         return value.strftime(format)
     if type(value) is str:
