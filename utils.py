@@ -108,28 +108,65 @@ def render_markdown_text(text_to_render):
 ##############################################################################################
 #
 
-#def getDatetimeFromString(dateString):
-#    if type(dateString) is str: # or type(dateString) is unicode:
-#        pass
-#    else:
-#        return None
-#        
-#    dateString = dateString[:19]
-#    timeDelimiter = " "
-#    if "T" in dateString:
-#        timeDelimiter = "T"
-#
-#    formatString = '%Y-%m-%d'+timeDelimiter+'%H:%M:%S'
-#    try:
-#        theDate = datetime.strptime(dateString, formatString) ## convert string to datetime
-#    except Exception as e:
-#        printException("Bad Date String","error",e)
-#        theDate = None
-#        
-#    if theDate == None:
-#        return None
-#        
-#    return theDate.replace(microsecond=0)
+def str_to_short_date(date_str):
+    formats = [
+    '%m/%d/%y',
+    '%m/%d/%Y',
+    '%m-%d-%y',
+    '%m-%d-%Y',
+    '%y-%m-%d',
+    '%Y-%m-%d',
+    ]
+    
+    space_at = date_str.find(" ")
+    if space_at > 0:
+        date_str = date_str[:space_at]
+    
+    a_date = None
+    for fmt in formats:
+        try:
+            a_date = datetime.strptime(date_str,fmt)
+            break
+        except Exception as e:
+            a_date = datetime.now()
+            
+    return a_date
+
+
+def getDatetimeFromString(dateString):
+    if type(dateString) is str: # or type(dateString) is unicode:
+        pass
+    else:
+        return None
+        
+    dateString = dateString[:19]
+    timeDelimiter = " "
+    if "T" in dateString:
+        timeDelimiter = "T"
+
+    formats = [
+        '%m/%d/%y',
+        '%m/%d/%Y',
+        '%m-%d-%y',
+        '%m-%d-%Y',
+        '%y-%m-%d',
+        '%Y-%m-%d',
+        '%Y-%m-%d{}%H:%M:%S'.format(timeDelimiter),
+        '%y-%m-%d{}%H:%M:%S'.format(timeDelimiter),
+        '%Y-%m-%d{}%H:%M'.format(timeDelimiter),
+        '%y-%m-%d{}%H:%M'.format(timeDelimiter),
+        
+        ]
+
+    theDate = None
+    for fmt in formats:
+        try:
+            theDate = datetime.strptime(dateString,fmt)
+            break
+        except Exception as e:
+            theDate = datetime.now()
+                
+    return theDate.replace(microsecond=0)
 #
 #
 #def getLocalTimeAtEvent(tz,isDST=0):
