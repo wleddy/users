@@ -1,8 +1,9 @@
 from users.utils import getDatetimeFromString
+from datetime import datetime
 
 # some custom filters for templates
 
-def short_date_string(value, format='%-m/%-d/%y'):
+def short_date_string(value, format='%m/%d/%y'):
     if type(value) is datetime:
         return value.strftime(format)
     if type(value) is str:
