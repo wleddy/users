@@ -85,6 +85,7 @@ def logout():
     return redirect('/')
     
 @mod.route('/reset', methods=['GET','POST'])
+@mod.route('/reset/', methods=['GET','POST'])
 def recover_password():
     """Send reset password and send user an email if they forget their password"""
     
