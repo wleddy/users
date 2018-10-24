@@ -1,4 +1,4 @@
-from users.utils import getDatetimeFromString
+from date_utils import getDatetimeFromString
 from datetime import datetime
 
 # some custom filters for templates

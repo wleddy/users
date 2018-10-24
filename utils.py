@@ -3,7 +3,7 @@
 """
 
 from flask import g
-from datetime import datetime, timedelta
+from date_utils import nowString
 import linecache
 import sys
 import re
@@ -63,10 +63,6 @@ def printException(mes="An Unknown Error Occured",level="error",err=None):
     else:
         return mes
     
-def nowString():
-    """Return the timestamp string in the normal format"""
-    return datetime.now().isoformat()[:19]
-    
 def get_access_token(token_length=24):
     """Return an access token that does not exist in the user table"""
     from users.models import User
@@ -102,71 +98,4 @@ def render_markdown_for(source_script,module,file_name):
 
 def render_markdown_text(text_to_render):
     return mistune.markdown(text_to_render)
-       
-##############################################################################################
-## These are functions left over from bikeandwalk. Don't think I need them, but you never know
-##############################################################################################
-#
-
-def getDatetimeFromString(dateString):
-    if type(dateString) is str: # or type(dateString) is unicode:
-        pass
-    else:
-        return None
-        
-    dateString = dateString[:19]
-    timeDelimiter = " "
-    if "T" in dateString:
-        timeDelimiter = "T"
-
-    formats = [
-        '%m/%d/%y',
-        '%m/%d/%Y',
-        '%m-%d-%y',
-        '%m-%d-%Y',
-        '%y-%m-%d',
-        '%Y-%m-%d',
-        '%Y-%m-%d{}%H:%M:%S'.format(timeDelimiter),
-        '%y-%m-%d{}%H:%M:%S'.format(timeDelimiter),
-        '%Y-%m-%d{}%H:%M'.format(timeDelimiter),
-        '%y-%m-%d{}%H:%M'.format(timeDelimiter),
-        
-        ]
-
-    theDate = None
-    for fmt in formats:
-        try:
-            theDate = datetime.strptime(dateString,fmt)
-            break
-        except Exception as e:
-            theDate = datetime.now()
-                
-    return theDate.replace(microsecond=0)
-#
-#
-#def getLocalTimeAtEvent(tz,isDST=0):
-#    """
-#        Return the current local time at an event location
-#    """
-#    localTime = datetime.utcnow() + timedelta(hours=(getTimeZoneOffset(tz))) ## get local time at the event location
-#    if(isDST == 1):
-#        localTime = localTime + timedelta(hours=1)
-#    
-#    return localTime.replace(microsecond=0)
-#    
-#def getTimeZones():
-#    # return a dictionary of time zone names and offsets
-#    tz = {"EST":{"longName" : 'New York US', "offset": -5}, 
-#          "CST":{"longName" : 'Chicago US', "offset": -6},
-#          "MST":{"longName" : 'Denver US', "offset": -7},
-#          "PST":{"longName" : 'Los Angeles US', "offset": -8},
-#         }
-#    return tz
-#    
-#def getTimeZoneOffset(zone=""):
-#    tz = getTimeZones()
-#    try:
-#        return tz[zone.upper()]["offset"]
-#    except KeyError:
-#        return 0
-#    
+      
