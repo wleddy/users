@@ -1,12 +1,13 @@
+from datetime import datetime
 from flask import request, session, g, redirect, url_for, abort, \
      render_template, flash, Blueprint
+from takeabeltof.utils import printException, cleanRecordID, looksLikeEmailAddress
+from time import time
 from users.models import User, Role
-from users.utils import printException, cleanRecordID, looksLikeEmailAddress, get_access_token
+from users.utils import get_access_token
 from users.views.login import setUserStatus
 from users.views.password import getPasswordHash
 from users.admin import login_required, table_access_required
-from time import time
-from datetime import datetime
 
 
 mod = Blueprint('user',__name__, template_folder='../templates', url_prefix='/user')
@@ -162,7 +163,7 @@ def edit(rec_handle=None):
                 return redirect(g.listURL)
                 
             if is_new_user == True and rec.email:
-                from users.mailer import send_message
+                from takeabeltof.mailer import send_message
                 
                 # send an email to welcome the new user
                 full_name = '{} {}'.format(rec.first_name,rec.last_name).strip()
@@ -201,7 +202,7 @@ def register():
     user = User(g.db)
     rec=user.new()
     
-    from users.mailer import send_message
+    from takeabeltof.mailer import send_message
     from app import app
     
     is_admin = False
@@ -295,7 +296,7 @@ def register():
 @table_access_required(User)
 def activate():
     """Allow administrator to activate a new user"""
-    from users.mailer import send_message
+    from takeabeltof.mailer import send_message
     
     activate = request.args.get('activate',None)
     if activate:

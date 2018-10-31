@@ -1,5 +1,5 @@
-from users.database import SqliteTable
-from users.utils import cleanRecordID
+from takeabeltof.database import SqliteTable
+from takeabeltof.utils import cleanRecordID
 from users.views.password import getPasswordHash
         
 class Role(SqliteTable):

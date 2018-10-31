@@ -112,7 +112,7 @@ def recover_password():
             g.db.commit()
             
             # send an email with instructions
-            from users.mailer import send_message
+            from takeabeltof.mailer import send_message
             full_name = rec.first_name + " " + rec.last_name
             context = {'temp_pass':temp_pass,'rec':rec,'full_name':full_name}
             to_address_list=[(full_name,rec.email),]

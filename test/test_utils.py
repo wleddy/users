@@ -2,7 +2,7 @@ import sys
 #print(sys.path)
 sys.path.append('') ##get import to look in the working dir.
 
-import users.utils as utils
+import takeabeltof.utils as utils
 
 def test_cleanRecordID():
     """Tesst the cleanRecordID utility fuction"""

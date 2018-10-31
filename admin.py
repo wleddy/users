@@ -110,7 +110,7 @@ def silent_login(alert=True):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             from users.views.login import authenticate_user
-            from users.mailer import email_admin
+            from takeabeltof.mailer import email_admin
             if g.user == None \
                 and (not request.form \
                 or 'username' not in request.form \

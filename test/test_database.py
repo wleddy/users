@@ -9,7 +9,7 @@ def delete_test_db():
         os.remove(filespec)
 
 def test_database():
-    from users.database import Database
+    from takeabeltof.database import Database
     db2 = Database(filespec)
     assert type(db2) is Database
 

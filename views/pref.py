@@ -1,7 +1,7 @@
 from flask import request, session, g, redirect, url_for, \
      render_template, flash, Blueprint
 from users.models import Pref
-from users.utils import printException, cleanRecordID
+from takeabeltof.utils import printException, cleanRecordID
 from users.admin import login_required, table_access_required
 
 mod = Blueprint('pref',__name__, template_folder='../templates', url_prefix='/pref')
