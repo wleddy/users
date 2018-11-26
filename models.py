@@ -122,6 +122,16 @@ class User(SqliteTable):
         
         return super().select(where=where,order_by=order_by)
         
+    def update(self,rec,form,save=False):
+        # active must be an integer
+        if 'active' in form and type(form['active']) is str:
+            super().update(rec,form,False)
+            rec.active = int(rec.active)
+            form = rec
+        # update normally and save is requested
+        super().update(rec,form,save)
+            
+        
     def update_last_access(self,user_id,no_commit=False):
         """Update the 'last_access field with the current datetime. Default is for record to be committed"""
         if type(user_id) is int:
