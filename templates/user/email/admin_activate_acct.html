@@ -1,20 +1,33 @@
 <h3>Account Activation Request</h3>
-<p>A new user account has been confirmed and needs to be activated.</p>
 {% if context.confirmURL %}
+<p>A new user account has been confirmed and needs to be activated.</p>
 <p>Click this link to <a href="{{context.confirmURL}}">Confirm and Activate</a></p>
+<p>Click this link to <a href="{{context.deleteURL}}">Delete this account</a></p>
 {% else %}
-<p>UNCONFIRMED ACCOUNT REQUEST (Expires: {{ context.registration_exp }})</p>
+<p>Someone has requested a an account at {{ config.SITE_NAME | default("you web site",True)}}</p>
+<p>
+    If you wish to nip this in the bud you can <a href="{{context.deleteURL}}">Delete this account</a> 
+    otherwise, wait you receive another email which will allow you to activate the account.
+</p>
+<p>This registration request expires: {{ context.registration_exp }}</p>
 {% endif %}
 <p>User Info:</p>
 <table>
     <tr><th>Name</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.first_name}} {{context.rec.last_name}}</td></tr>
     <tr><th>Email</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.email|default('None',True)}}</td></tr>
     <tr><th>username</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.username|default('None',True)}}</td></tr>
-    <tr><th>password</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.password|default('None',True)}}</td></tr>
+    <tr><th>password</th>
+        <td>&nbsp;&nbsp;&nbsp;
+            {% if context.rec.password %}
+            Password provided
+            {% else %}
+            None
+            {% endif %}
+        </td>
+    </tr>
     <tr><th>Address</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.address|default('None',True)}}</td></tr>
     <tr><th>Address 2</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.address2|default('None',True)}}</td></tr>
     <tr><th>City</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.city|default('None',True)}}</td></tr>
     <tr><th>State</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.state|default('None',True)}}</td></tr>
     <tr><th>Zip</th><td>&nbsp;&nbsp;&nbsp;{{context.rec.zip|default('None',True)}}</td></tr>
 </table>
-<p>Click this link to <a href="{{context.deleteURL}}">Delete this account</a></p>
