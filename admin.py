@@ -8,7 +8,7 @@ from flask import g, request, redirect, url_for, flash
 from functools import wraps
 
 class Admin():
-    """Register tables to be administered then check a user's access permissions
+    """Register tables to be administered and check a user's access permissions
     
     Instanciate as:
         admin = Admin(g.db)
@@ -55,7 +55,7 @@ class Admin():
            
     def has_access(self,user_name,table=None):
         """Test to see if the user represented by user name has access to ANY admin items
-        If the display_name is specified, only check to see if user has access to that table"""
+        If a table class is specified, only check to see if user has access to that table"""
         from users.models import User
         
         if len(self.permissions) == 0:

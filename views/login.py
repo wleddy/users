@@ -141,8 +141,12 @@ def setUserStatus(userNameOrEmail,user_id):
     user = User(g.db)
     user.update_last_access(user_id)
     session["user"] = userNameOrEmail.strip()
-    g.user = userNameOrEmail
-    g.user_roles = user.get_roles(user_id)
+    g.user = session["user"]
+    session["user_roles"] = []
+    recs = user.get_roles(user_id)
+    if recs:
+        session["user_roles"] = [rec.name for rec in recs]
+    g.user_roles = session['user_roles']
     
     
 def authenticate_user(username,password,**kwargs):
