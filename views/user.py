@@ -72,7 +72,10 @@ def edit(rec_handle=None):
     request_rec_id = cleanRecordID(request.form.get('id',request.args.get('id',-1)))
     is_admin = g.admin.has_access(g.user,User)
     no_delete = not is_admin
-    user_roles = []
+    session_roles = session["user_roles"] #roles of currnet user
+    new_password = ''
+    confirm_password = ''
+    user_roles = ['user'] # default
     roles = Role(g.db).select()
     include_inactive = True
     
@@ -103,7 +106,7 @@ def edit(rec_handle=None):
                 flash("Unable to locate user record")
                 return redirect('/')
                 
-        user_roles = get_user_role_names(rec)
+            user_roles = get_user_role_names(rec)
         
     else:
         #have the request form
@@ -134,9 +137,6 @@ def edit(rec_handle=None):
             #update the record
             user.update(rec,request.form)
             
-            #ensure a value for the check box
-            rec.active = int(request.form.get('active',rec.active))
-            
             set_username_from_form(rec)        
             set_password_from_form(rec)
     
@@ -147,8 +147,11 @@ def edit(rec_handle=None):
                 if 'roles_select' in request.form:
                     #delete all the users current roles
                     user.clear_roles(rec.id)
-                    for role_id in request.form.getlist('roles_select'):
-                        user.add_role(rec.id,role_id)
+                    for role_name in request.form.getlist('roles_select'):
+                        #find the role by name
+                        role = Role(g.db).select_one(where='name = "{}"'.format(role_name))
+                        if role:
+                            user.add_role(rec.id,role.id)
                     
                 # if the username or email address are the same as g.user
                 # update g.user if it changes
@@ -188,9 +191,24 @@ def edit(rec_handle=None):
             user.update(rec,request.form)
             if 'new_username' in request.form:
                 rec.username = request.form['new_username'] #preserve user input
+            # preserve the selected roles
+            #import pdb;pdb.set_trace()
+            if 'roles_select' in request.form:
+                user_roles = request.form.getlist('roles_select')
+            #and password
+            new_password = request.form.get('new_password','')
+            confirm_password = request.form.get('confirm_password','')
 
     # display form
-    return render_template('user/user_edit.html', rec=rec, no_delete=no_delete, is_admin=is_admin, user_roles=user_roles, roles=roles)
+    return render_template('user/user_edit.html', rec=rec, 
+        no_delete=no_delete, 
+        is_admin=is_admin, 
+        user_roles=user_roles, 
+        roles=roles,
+        session_roles=session_roles,
+        new_password=new_password,
+        confirm_password=confirm_password,
+        )
     
 @mod.route('/register/', methods=['GET','POST'])
 def register():

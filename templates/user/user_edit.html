@@ -9,18 +9,20 @@
 		{% include "editFormButtons.html" %}
         <fieldset>
             <input type=hidden name="id" value="{{rec.id}}">
-            <p><span>Name: </span><input type=text size=30 name="first_name" required value="{{rec.first_name|default('',true)}}"/>
+            <p><span>Name*: </span><input type=text size=30 name="first_name" required value="{{rec.first_name|default('',true)}}"/>
                 <input type=text size=30 name="last_name" required value="{{rec.last_name|default('',true)}}"/>
             </p>
-            <p><span>Email: </span><input type=email size=30 name="email" required value="{{rec.email|default('',true)}}"/></p>
+            <p><span>Email*: </span><input type=email size=30 name="email" required value="{{rec.email|default('',true)}}"/></p>
             <p><span>User Name: </span>
                 <input type=text size=30 name="new_username" value="{{rec.username|default('',true)}}" 
                 {% if not config.ALLOW_USERNAME_CHANGE %}disabled="disabled"{% endif %} />
             </p>
             <p><span>Password: {% if rec.password and rec.password != '' %}(leave blank to keep current){% else %}(&mdash; Optional &mdash;){% endif %}: </span>
-                <input type=password size=30 name="new_password" value=""/>
+                <input type=password size=30 name="new_password" value="{{ new_password | default('',True)}}"/>
             </p>
-            <p><span>Re-enter password: </span><input type=password size=30 name="confirm_password" value=""/></p>
+            <p><span>Re-enter password: </span>
+                <input type=password size=30 name="confirm_password" value="{{ confirm_password | default('',True)}}"/>
+            </p>
             <p><span>Address: </span><input type=text size=47 name="address" value="{{rec.address|default('',true)}}"/>
                 <br/><input type=text size=47 name="address2" value="{{rec.address2|default('',true)}}"/>
                 </p>
@@ -34,7 +36,10 @@
                 <p><span>Roles: </span>
                 <select name="roles_select" multiple size="5">
                     {% for role in roles %}
-                        <option value="{{role.id}}" {% if role.name in user_roles %}selected="selected" {% endif %}>{{role.name}}</option>
+                        {% if role.name == "super" and "super" is not in session_roles %}
+                        {% else %}
+                        <option value="{{role.name}}" {% if role.name in user_roles %}selected="selected" {% endif %}>{{role.name}}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
                 </p>
