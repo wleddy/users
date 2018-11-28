@@ -139,3 +139,29 @@ def validForm(rec):
                 
     return goodForm
     
+    
+def get_contact_email():
+    """Return a tuple of the contact name and email address or None"""
+    from app import app
+    
+    to = None
+    to_name = Pref(g.db).get("Contact Name")
+    to_addr = Pref(g.db).get("Contact Email Address")
+    if not to_addr:
+        # Try to get it from configs
+        try:
+            to = (app.config['CONTACT_NAME'],app.config['CONTACT_EMAIL_ADDR'],)
+        except KeyError as e:
+            pass
+        if not to:
+            try:
+                to = (app.config['MAIL_DEFAULT_SENDER'],app.config['MAIL_DEFAULT_ADDR'],)
+            except KeyError as e:
+                pass
+    else:
+        if not to_name:
+            to_name = "Site Contact"
+            
+        to = (to_name,to_addr)
+        
+    return to
