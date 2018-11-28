@@ -221,7 +221,7 @@ class Pref(SqliteTable):
             user_clause = ' and user_name = {}'.format(user_name)
         
         if type(name) is str:
-            where = ' name = "{}" {}'.format(name,user_clause)
+            where = ' lower(name) = lower("{}") {}'.format(name,user_clause)
         else:
             where = ' id = {}'.format(cleanRecordID(name))
             
