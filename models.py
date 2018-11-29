@@ -225,7 +225,18 @@ class Pref(SqliteTable):
         else:
             where = ' id = {}'.format(cleanRecordID(name))
             
-        return self.select_one(where=where)
+        result = self.select_one(where=where)
+        
+        if not result and 'default' in kwargs and type(name) is str:
+            # create a record with the default value
+            rec = self.new()
+            rec.name = name
+            rec.value = kwargs['default']
+            self.save(rec)
+            self.db.commit()
+            result = rec
+            
+        return result
         
         
 def init_db(db):
