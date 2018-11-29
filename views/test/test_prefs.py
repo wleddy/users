@@ -16,28 +16,6 @@ def client():
     app.app.config['TESTING'] = True
     client = app.app.test_client()
 
-    with app.app.app_context():
-        print(app.app.config['DATABASE_PATH'])
-        app.init_db(app.get_db(app.app.config['DATABASE_PATH']))
-        # Add some more users
-        f = open('users/views/test/test_data_create.sql','r')
-        sql = f.read()
-        f.close()
-        cur = app.g.db.cursor()
-        cur.executescript(sql)
-        # doris and John need passwords
-        rec = app.User(app.g.db).get('doris')
-        rec.password = getPasswordHash('password')
-        app.User(app.g.db).save(rec)
-        rec = app.User(app.g.db).get('John')
-        rec.password = getPasswordHash('password')
-        app.User(app.g.db).save(rec)
-        app.g.db.commit()
-        
-        rec = app.User(app.g.db).get('doris')
-        print(rec)
-        rec = app.User(app.g.db).get('John')
-        print(rec)
         
     yield client
 
@@ -78,6 +56,11 @@ def test_prefs():
     assert rec.name == 'Testing'
     assert rec.value == "A test value"
 
+    # get is now case in-sensitive
+    rec = Pref(db).get('testing')
+    assert rec.name == 'Testing'
+    assert rec.value == "A test value"
+
     #Modify the record
     rec.name = "New Test"
     Pref(db).save(rec)
@@ -86,6 +69,33 @@ def test_prefs():
     
     db.rollback()
     
+    # test the default setting
+    pref_name = "A new pref"
+    default_value = "A Default value"
+    rec = Pref(db).get(pref_name)
+    assert rec == None
+    
+    rec = Pref(db).get(pref_name,default=default_value)
+    assert rec != None
+    assert rec.name == pref_name
+    assert rec.value == default_value
+    
+    # this should have no effect
+    db.rollback()
+    
+    rec = Pref(db).get(pref_name)
+    assert rec != None
+    assert rec.name == pref_name
+    assert rec.value == default_value
+    
+    
+    #new pref was committed, so delete it
+    assert Pref(db).delete(rec.id) == True
+    db.commit()
+    
+    #Test that it's really gone
+    rec = Pref(db).get(pref_name)
+    assert rec == None
     
 ############################ The final 'test' ########################
 ######################################################################
