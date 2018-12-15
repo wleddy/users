@@ -34,6 +34,23 @@ with app.app.app_context():
     db = app.get_db(filespec)
     app.init_db(db)
 
+# These are used in other tests that need to login
+def login(client, username=None, password=None):
+    if not username and not password:
+        username = 'admin'
+        password = 'password'
+
+    # have to call with get first to set the session cookie or no login
+    result = client.get('/login/', follow_redirects=True)
+    return client.post('/login/', data=dict(
+        userNameOrEmail=username,
+        password=password
+    ), follow_redirects=True)
+
+
+def logout(client):
+    return client.get('/logout/', follow_redirects=True)
+        
         
 def delete_test_db():
         os.remove(filespec)
