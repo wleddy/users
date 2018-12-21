@@ -17,6 +17,7 @@ def setExits():
 @table_access_required(Role)
 def display():
     setExits()
+    g.title = "{} Record List".format(g.title)
     # get all records
     recs = Role(g.db).select()
     return render_template('role/role_list.html',recs=recs)
@@ -29,6 +30,7 @@ def display():
 @table_access_required(Role)
 def edit(rec_id=None):
     setExits()
+    g.title = "Edit {} Record".format(g.title)
 
     role = Role(g.db)
     rec = None
@@ -90,6 +92,7 @@ def edit(rec_id=None):
 @table_access_required(Role)
 def delete(rec_id=None):
     setExits()
+    g.title = "Delete {} Record".format(g.title)
     if rec_id == None:
         rec_id = request.form.get('id',request.args.get('id',-1))
     

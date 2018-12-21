@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import request, session, g, redirect, url_for, abort, \
      render_template, flash, Blueprint
-from takeabeltof.utils import printException, cleanRecordID, looksLikeEmailAddress
+from takeabeltof.utils import printException, cleanRecordID, looksLikeEmailAddress, render_markdown_for
 from time import time
 from users.models import User, Role
 from users.utils import get_access_token
@@ -32,6 +32,7 @@ def home():
 @table_access_required(User)
 def display():
     setExits()
+    g.title = "{} List".format(g.title)
     include_inactive = True
     
     recs = User(g.db).select(include_inactive=include_inactive)
@@ -65,6 +66,7 @@ def admin(id=None):
 @login_required
 def edit(rec_handle=None):
     setExits()
+    g.title = "Edit {} Record".format(g.title)
     #import pdb;pdb.set_trace()
 
     user = User(g.db)
@@ -90,7 +92,7 @@ def edit(rec_handle=None):
     else:
         rec_handle = request_rec_id
         if rec_handle < 0:
-            flash("That is not a valid ID")
+            flash("That is not a valid User ID")
             return redirect(g.listURL)
         
     if not request.form:
@@ -228,10 +230,8 @@ def register():
     roles=None
     no_delete=True
     success=True
-    help = """
-    <p>Please complete this form to creeate your account. Fields marked with an asterisk (*) are required.</p>
-    <p>You may omit the password if you like, but if you do you will not be able to edit your account informaion in the future</p>"""
-        
+    help = render_markdown_for(__file__,mod,"user/new_account_help.md")        
+    
     if 'confirm' in request.args:
         #Try to find the user record that requested registration
         rec=user.select_one(where='access_token = "{}"'.format(request.args.get('confirm','')).strip())

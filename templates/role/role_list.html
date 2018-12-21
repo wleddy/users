@@ -1,26 +1,26 @@
 {% extends "layout.html" %}
-{% block title %}{{ g.title }} List{% endblock %}
+{% block title %}{{ g.title }}{% endblock %}
 {% block body %}
-	<h2>{{g.title}} List</h2>
-      	<p id="addRecord"><a href="{{ g.editURL }}0/">Add a new {{ g.title }}</a></p>
+
+      	<p id="addRecord"><a href="{{ g.editURL }}0/">Add a new record</a></p>
 	{%if recs %}
-		<table class="datatable">
-		<tr>
+		<table class="datatable w3-table w3-striped w3-hoverable">
+		<tr class="w3-teal">
 			<th>Id</th>
 			<th>Name</th>
 			<th>Description</th>
-            <th>Rank</th>
+            <th class="w3-hide-small" >Rank</th>
 		</tr>
 		{% for rec in recs %}
 	    <tr>
-			<td style="min-width:20px;text-align:center;"><a href="{{ g.editURL }}{{ rec.id }}/">{{ rec.id }}</a></td>
-			<td style="min-width:100px;"><a href="{{ g.editURL }}{{ rec.id }}/">{{ rec.name }}</a></td>
-			<td style="min-width:200px;">{{ rec.description|default("",true) }}</td>
-			<td style="min-width:80px;text-align:right;">{{ rec.rank|default("0",true) }}</td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'">{{ rec.id }}</a></td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'">{{ rec.name }}</a></td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'">{{ rec.description|default("",true) }}</td>
+			<td  class="w3-hide-small" onclick="window.location='{{ g.editURL }}{{rec.id}}/'">{{ rec.rank|default("0",true) }}</td>
 		</tr>
 		{% endfor %}
 	  </table>
   	{% else %}
-    	<p><em>No {{ g.title }}s here so far</em></p>
+    	<p><em>No records here so far</em></p>
 	{% endif %}
 {% endblock %}

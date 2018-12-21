@@ -1,15 +1,13 @@
-{% extends "layout.html" %}
-{% block title %}Edit {{ g.title }}{% endblock %}
-{% block body %}
-	<h2>Edit {{ g.title }}</h2>	
-    <form action="{{ g.editURL }}{{ rec.id|default('0',True)}}/" method=post class="entry">
-		{% include "editFormButtons.html" %}
-        <fieldset>
-    		<input type=hidden name="id" value="{{rec.id|default('0',True )}}">
-            <p><span>Name:</span><input type="text" size="10" name="name" required value="{{ rec.name|default('',True )}}" /></p>
-            <p><span>Value: </span><input type="text" size="30" name="value" required value="{{ rec.value|default('',True )}}" /></p>
-            <p><span>User Name: </span><input type="text" name="user_name"  value="{{ rec.user_name|default('',True)}}" /></p>
-            <p><span>Expires: </span><input type="date" name="expire_marker" disabled="disabled" value="{{ rec.expires|default('Never',True)}}" /></p>
-        </fieldset>
-    </form>
-{% endblock body %}
+{% extends "form_layout.html" %}
+
+{% from "_form_helpers.html" import input_field, select_field, radio_field, checkbox_field, label_only %}
+
+{% block fieldset %}
+<fieldset>
+    <p>{{ input_field(rec.id,"id",type="hidden",default=0)}}</p>
+    <p>{{ input_field(rec.name,"name",req=True)}}</p>
+    <p>{{ input_field(rec.value,"value",req=True)}}</p>
+    <p>{{ input_field(rec.user_name,"user_name")}}</p>
+    <p>{{ input_field(rec.expires,"expire_marker",label="Expires",placeholder="Never")}}</p>
+</fieldset>
+{% endblock fieldset %}

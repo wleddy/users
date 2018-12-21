@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 {% block title %}{{ g.title }}{% endblock %}
 {% block body %}
+<div class="w3-container">
+    <div class="w3-col m1 l2">&nbsp;</div>
+    <div class="entry w3-col w3-panel w3-card-4 l8 m10 ">
 {% if success == 'active' %}
     <h3>Your account is now active.</h3>
     <p>Your account is now ready to use. You may <a href="{{url_for('login.login')}}">log in</a> here.</p>
@@ -20,4 +23,7 @@
 {% endif %}
 
     <p><a href="/">Go to Site home page</a></p>
+    
+    </div>
+</div>
 {% endblock body %}

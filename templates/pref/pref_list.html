@@ -1,28 +1,27 @@
 {% extends "layout.html" %}
-{% block title %}{{ g.title }} List{% endblock %}
+{% block title %}{{ g.title }}{% endblock %}
 {% block body %}
-	<h2>{{g.title}} List</h2>
-      	<p id="addRecord"><a href="{{ g.editURL }}0/">Add a new {{ g.title }}</a></p>
+      	<p id="addRecord"><a href="{{ g.editURL }}0/">Add a new record</a></p>
 	{%if recs %}
-		<table class="datatable">
-		<tr>
-			<th>Id</th>
+		<table class="datatable w3-table w3-striped w3-hoverable">
+		<tr class="w3-teal">
+			<th class="w3-hide-small">Id</th>
 			<th>Name</th>
-			<th>value</th>
-            <th>User</th>
-            <th>Expires</th>
+			<th>Value</th>
+            <th class="w3-hide-small">User</th>
+            <th class="w3-hide-small">Expires</th>
 		</tr>
 		{% for rec in recs %}
 	    <tr>
-			<td style="min-width:20px;text-align:center;"><a href="{{ g.editURL }}{{ rec.id }}/">{{ rec.id }}</a></td>
-			<td style="min-width:30px;"><a href="{{ g.editURL }}{{ rec.id }}/">{{ rec.name }}</a></td>
-			<td style="min-width:60px;">{{ rec.value|default("",true) | truncate(50,False) }}</td>
-			<td style="min-width:30px;">{{ rec.user_name|default("",true) }}</td>
-			<td style="min-width:30px;">{{ rec.expires|default("Never",true) }}</td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'" class="w3-hide-small">{{ rec.id }}</td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'">{{ rec.name }}</td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'">{{ rec.value|default("",true) | truncate(50,False) }}</td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'" class="w3-hide-small">{{ rec.user_name|default("",true) }}</td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'" class="w3-hide-small">{{ rec.expires|default("Never",true) }}</td>
 		</tr>
 		{% endfor %}
 	  </table>
   	{% else %}
-    	<p><em>No {{ g.title }}s here so far</em></p>
+    	<p><em>No records here so far</em></p>
 	{% endif %}
 {% endblock %}
