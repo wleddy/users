@@ -44,7 +44,7 @@
             {% if rec.active ==0 %}{% set extras = ' checked="checked"' %}{% endif %}
             {{ radio_field(0,"active","Inactive:",extras=extras ,right=True ) }}
         </p>
-        <p>{{ label_only("Last Access:")}} {{rec.last_access|default('Never',true)}} (UTC)</p>
+        <p>{{ label_only("Last Access:")}} {{rec.last_access|default('Never',True)}} (UTC)</p>
     {% endif %}
 </fieldset>
 {% endblock %}

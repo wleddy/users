@@ -16,8 +16,8 @@
 			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'" class="w3-hide-small">{{ rec.id }}</td>
 			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'">{{ rec.name }}</td>
 			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'">{{ rec.value|default("",true) | truncate(50,False) }}</td>
-			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'" class="w3-hide-small">{{ rec.user_name|default("",true) }}</td>
-			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'" class="w3-hide-small">{{ rec.expires|default("Never",true) }}</td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'" class="w3-hide-small">{{ rec.user_name|default("-All-",True) }}</td>
+			<td onclick="window.location='{{ g.editURL }}{{rec.id}}/'" class="w3-hide-small">{{ rec.expires|default("Never",True) }}</td>
 		</tr>
 		{% endfor %}
 	  </table>

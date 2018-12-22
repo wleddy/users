@@ -10,11 +10,11 @@
 			<div>
 				<p>User Name or Email Address:</p>
 				<p><input class="w3-input" type=text size=30 name="userNameOrEmail" 
-                    value="{{form.userNameOrEmail|default('',true)}}"
+                    value="{{form.userNameOrEmail|default('',True)}}"
                     placeholder="Username or Email Address" /></p>
                 <p>Password:</p>
 				<p><input class="w3-input" type=password size=30 name="password" 
-                    value="{{form.password|default('',true)}}"
+                    value="{{form.password|default('',True)}}"
                     placeholder="Password" /></p>
 				<p><input class="w3-btn w3-round-large w3-teal" type="submit" name="login" value="Log In" />
                     {% if config.ALLOW_USER_SIGNUP %} or <a href="{{ g.registerURL }}">Sign Up</a>{% endif %}
