@@ -17,7 +17,7 @@
     {% if rec.password and rec.password != '' %}
         {% set label = 'Password <em class="w3-small">(leave as-is to keep current)</em>' %}
     {% endif %}
-    <p>{{ input_field(rec.password,"new_password",type="password",label=label) }}</p>
+    <p>{{ input_field(new_password,"new_password",type="password",label=label) }}</p>
     <p>{{ input_field(confirm_password,"confirm_password",type="password",label="Re-enter password") }}</p>
     <p>{{ input_field(rec.address,"address") }}</p>
     <p>{{ input_field(rec.address2,"address2",label="Address line 2") }}</p>
@@ -27,7 +27,7 @@
     <p>{{ input_field(rec.phone,"phone") }}</p>
     
     {% if is_admin %}
-    <p>{{ select_field(roles_select,"Role",extras='multiple size="5"', class="w3-border") }}
+    <p>{{ select_field("roles_select","Role",extras='multiple size="5"', class="w3-border") }}
             {% for role in roles %}
                 {% if role.name == "super" and "super" is not in session_roles %}
                 {% else %}
