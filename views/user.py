@@ -230,7 +230,7 @@ def register():
     roles=None
     no_delete=True
     success=True
-    help = render_markdown_for(__file__,mod,"user/new_account_help.md")        
+    help = render_markdown_for("user/new_account_help.md",__file__,mod)        
     
     if 'confirm' in request.args:
         #Try to find the user record that requested registration
