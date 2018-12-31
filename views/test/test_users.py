@@ -11,19 +11,19 @@ import app
 
 @pytest.fixture
 def client():
-    db_fd, app.app.config['DATABASE'] = tempfile.mkstemp()
+    db_fd, app.app.config['DATABASE_PATH'] = tempfile.mkstemp()
     app.app.config['TESTING'] = True
     client = app.app.test_client()
 
     with app.app.app_context():
-        print(app.app.config['DATABASE'])
-        app.init_db(app.get_db(app.app.config['DATABASE'])) 
+        print(app.app.config['DATABASE_PATH'])
+        app.init_db(app.get_db(app.app.config['DATABASE_PATH'])) 
         print(app.g.db)
         
     yield client
 
     os.close(db_fd)
-    os.unlink(app.app.config['DATABASE'])
+    os.unlink(app.app.config['DATABASE_PATH'])
     
     
 filespec = 'instance/test_users.db'
@@ -173,7 +173,45 @@ def test_user_profile_page(client):
             assert result.status_code == 200
             assert b'Edit User' in result.data
                 
+def test_user_register(client):
+        with client as c:
+            from flask import session, g
+            result = c.get('/user/register/',follow_redirects=True)  
+            assert result.status_code == 200
+            assert b'Account Registration' in result.data
+            
+            form_data = {
+            'id':'0',
+            'first_name':'Willie',
+            'last_name': 'Nillie',
+            'email': 'willie@testing.com',
+            'new_username': 'testuser',
+            'new_password': '',
+            'confirm_password': '',
+            'address': '',
+            'address2': '',
+            'city': '',
+            'state': '',
+            'zip': '',
+            'phone': '',
+            }
 
+            result = c.post('/user/register/', data=form_data,follow_redirects=True)
+            assert result.status_code == 200
+            assert b'Signup Successful' in result.data
+            
+            # test that bad url is rejected
+            result = c.post('/user/register/0/', data=form_data,follow_redirects=True)
+            assert result.status_code == 404
+            assert b'Signup Successful' not in result.data
+            
+            #test that duplicate name is rejected
+            result = c.post('/user/register/', data=form_data,follow_redirects=True)
+            assert result.status_code == 200
+            assert b'That email address is already in use' in result.data
+            assert b'That User Name is already in use' in result.data
+            
+            
 
 ############################ The final 'test' ########################
 ######################################################################
