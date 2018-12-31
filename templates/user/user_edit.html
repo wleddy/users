@@ -4,7 +4,7 @@
 
 {% block fieldset %}
 <fieldset>
-    <p>{{ input_field(rec.id,"id",type="hidden") }}</p>
+    <p>{{ input_field(rec.id,"id",type="hidden",default=0) }}</p>
     <p>{{ input_field(rec.first_name,"first_name",label="First Name*",req=True) }}</p>
     <p>{{ input_field(rec.last_name,"last_name",label="Last Name*",req=True) }}</p>
     <p>{{ input_field(rec.email,"email",label="Email*",req=True, type="email") }}
