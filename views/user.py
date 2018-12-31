@@ -212,7 +212,8 @@ def edit(rec_handle=None):
         confirm_password=confirm_password,
         )
     
-@mod.route('/register/', methods=['GET','POST'])
+@mod.route('/register', methods=['GET','POST',])
+@mod.route('/register/', methods=['GET','POST',])
 def register():
     """Allow people to sign up thier own accounts on the web site"""
     setExits()
